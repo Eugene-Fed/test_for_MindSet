@@ -4,8 +4,7 @@ __pycache__/
 *$py.class
 
 # API keys, meta, data and other secret info
-/pass_photos/*
-pass_photos/
+pass_photos/*
 
 # C extensions
 *.so
