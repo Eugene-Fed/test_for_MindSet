@@ -10,3 +10,5 @@ Text recognition is poor. But it turned out to be the easiest and most effective
 
 ### TASK 2
 I used the Yandex Cloud API
+To execute this code, you need to follow the instructions for create Yandex.Cloud accaunt and obtaining the primary Yandex.ID token:
+https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection
