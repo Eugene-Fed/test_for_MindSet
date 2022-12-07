@@ -4,11 +4,17 @@ import cv2
 import numpy as np
 import os
 import math
+import re
+
 
 # Список всех настроечных параметров/констант
 WORK_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25"
-TEMP_DIR = r"parsed"
+TEMP_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_full"
 OUT_SIZE = 28                  # размер выходных изображений
+LIMIT_SIZE = 10                 # размер блоков на изображении, меньше которого текст не вырезается
+SYMBOL_DIVIDE = 1.2            # если ширина блока больше высоты на этот коэффициент - то разделить его пополам
+PATTERN = r'\w'    # шаблон по которому будем извлекать из текста символы (только буквы)
+START_INDEX = 0         # индекс, с которого продолжаем обрабатывать файлы
 
 
 # Функция для получения списка файлов из каталога с фотографиями (как в task_1 и task_2)
@@ -65,8 +71,9 @@ def letter_crop_resize(img, y, h, x, w):
     return letter_square
 
 
-def letters_extract(image_file: str, out_size=OUT_SIZE):
-    img = cv2.imread(image_file)
+def letters_extract(file_path: str, out_size=OUT_SIZE) -> list:
+    # out_size - задает размер к которому будет приведено изображение
+    img = cv2.imread(file_path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     kernel = np.ones((2, 2), 'uint8')
@@ -84,10 +91,9 @@ def letters_extract(image_file: str, out_size=OUT_SIZE):
     for idx, contour in enumerate(contours):
         (x, y, w, h) = cv2.boundingRect(contour)
         cv2.rectangle(output, (x, y), (x + w, y + h), (70, 0, 0), 1)
-        limit = OUT_SIZE / 2          # ограничение на мелкие символы, чтобы их не вырезать
+        limit = int(LIMIT_SIZE)          # ограничение на мелкие символы, чтобы их не вырезать
         if limit < h < img.shape[0] and limit < w < img.shape[1]:  # игнорируем маленькие блоки, а также блок размером с изображение
-            c = 1.25  # просто коэффициент, рассчитанный на широкие буквы вроде Ж, М, Ш и т.д., чтобы их не делило
-            if w < h * c:
+            if w < h * SYMBOL_DIVIDE:
                 letters.append((x, w, cv2.resize(letter_crop_resize(gray, y=y, h=h, x=x, w=w),
                                                  (out_size, out_size), interpolation=cv2.INTER_AREA)))
             else:
@@ -104,6 +110,17 @@ def letters_extract(image_file: str, out_size=OUT_SIZE):
     return letters
 
 
+def chars_extract(file_path: str) -> list:
+    with open(file_path, 'r', encoding="utf-8") as f:
+        # удаляем пробелы и все символы кроме букв из текста и разбиваем на символы
+        text = f.read().strip()             # удаляем табы и лишние пробелы
+        text = text.replace(' ', '')        # удаляем оставшиеся пробелы
+        text = re.findall(PATTERN, text)      # оставляем только буквы и цифры
+        print(f'Список букв: {text}')
+
+    return list(text)
+
+
 def create_dir(path: os.path) -> os.path:
     if not os.path.exists(path):
         os.mkdir(path)
@@ -111,28 +128,39 @@ def create_dir(path: os.path) -> os.path:
 
 
 if __name__ == '__main__':
-    temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
-    create_dir(temp_dir)
+    # TODO добавить "следящий индекс" - сохранять во работы индекс обработанного файла и при следующем запуске
+    # todo стартовать с последнего сохраненного.
+    # TODO решить проблему с падением на определенном этапе из-за размеров изображения, которое пытаемся обработать
+    if not os.path.isdir(WORK_DIR):
+        print(f"Искомая папка отсутствует:\n{WORK_DIR}")
+        raise FileNotFoundError
+
+    # temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
+    create_dir(TEMP_DIR)
     image_paths, image_names = get_files(WORK_DIR)
     for id_i, image in enumerate(image_paths[:]):
         print(f'ImageID: {id_i}\nImagePath: {image}')
-        export_path = create_dir(os.path.join(temp_dir, f"{image_names[id_i]}"))
-
-        letters = letters_extract(image_file=image)
-        # Выгрузка изображений с буквами в отдельные папки
-        for id_l, letter in enumerate(letters):
-            cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.jpg'), letter[2])
-
-        # Выгрузка букв с тем же именем
+        export_path = create_dir(os.path.join(TEMP_DIR, f"{image_names[id_i]}"))       # создаем папку для вывода
+        letters = letters_extract(file_path=image)
         text_path = os.path.join(WORK_DIR, f'{image_names[id_i]}.gt.txt')
-        with open(text_path, 'r', encoding="utf-8") as f:
-            text = f.read().strip()
-            chars = list(text)      # удаляем пробелы из текста и разбиваем на символы
-            if len(letters) < len(chars):       # если удалось распознать не все буквы - снижаем ошибку из-за пропусков
-                chars = chars[:len(letters)]
+        print(f'TextPath: {text_path}')
+        chars = chars_extract(file_path=text_path)
 
-            print(f'Len of Letters: {len(letters)}, Len of Chars: {len(chars)}')
+        print(f'Len of Letters: {len(letters)}, Len of Chars: {len(chars)}')
+        # если удалось распознать не все или лишние буквы - снижаем ошибку из-за пропусков нормализуя их количество
+        min_len = min(len(letters), len(chars))
+        letters = letters[:min_len]
+        chars = chars[:min_len]
+
+        try:
+            # Выгрузка изображений с буквами в отдельные папки
+            for id_l, letter in enumerate(letters):
+                cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.jpg'), letter[2])
+
+            # Выгрузка букв в отдельные файлы
             for id_c, char in enumerate(chars):
                 with open(os.path.join(export_path, f'{image_names[id_i]}_{id_c}.txt'), 'w') as f:
                     f.write(char)
+        except Exception as e:
+            print(e)
 
