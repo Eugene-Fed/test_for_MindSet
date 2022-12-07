@@ -9,7 +9,7 @@ import re
 
 # Список всех настроечных параметров/констант
 WORK_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25"
-TEMP_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_full"
+TEMP_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_test"
 OUT_SIZE = 28                  # размер выходных изображений
 LIMIT_SIZE = 10                 # размер блоков на изображении, меньше которого текст не вырезается
 SYMBOL_DIVIDE = 1.2            # если ширина блока больше высоты на этот коэффициент - то разделить его пополам
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     # temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
     create_dir(TEMP_DIR)
     image_paths, image_names = get_files(WORK_DIR)
-    for id_i, image in enumerate(image_paths[:]):
+    for id_i, image in enumerate(image_paths[:10]):
         print(f'ImageID: {id_i}\nImagePath: {image}')
         export_path = create_dir(os.path.join(TEMP_DIR, f"{image_names[id_i]}"))       # создаем папку для вывода
         letters = letters_extract(file_path=image)
