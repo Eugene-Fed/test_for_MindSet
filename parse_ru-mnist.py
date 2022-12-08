@@ -5,11 +5,12 @@ import numpy as np
 import os
 import math
 import re
+from PIL import Image
 
 
 # Список всех настроечных параметров/констант
 WORK_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25"
-TEMP_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_full"
+EXPORT_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_for_idx"
 OUT_SIZE = 28                  # размер выходных изображений
 LIMIT_SIZE = 10                 # размер блоков на изображении, меньше которого текст не вырезается
 SYMBOL_DIVIDE = 1.2            # если ширина блока больше высоты на этот коэффициент - то разделить его пополам
@@ -84,17 +85,17 @@ def letters_extract(file_path: str, out_size=OUT_SIZE) -> list:
     result = invert
 
     contours, hierarchy = cv2.findContours(result, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    output = img.copy()
-    cv2.waitKey(0)
+    # output = img.copy()
+    # cv2.waitKey(0)
 
     letters = []
     for idx, contour in enumerate(contours):
         (x, y, w, h) = cv2.boundingRect(contour)
-        cv2.rectangle(output, (x, y), (x + w, y + h), (70, 0, 0), 1)
+        # cv2.rectangle(output, (x, y), (x + w, y + h), (70, 0, 0), 1)
         limit = int(LIMIT_SIZE)          # ограничение на мелкие символы, чтобы их не вырезать
         if limit < h < img.shape[0] and limit < w < img.shape[1]:  # игнорируем маленькие блоки, а также блок размером с изображение
             if w < h * SYMBOL_DIVIDE:
-                letters.append((x, w, cv2.resize(letter_crop_resize(gray, y=y, h=h, x=x, w=w),
+                letters.append((x, w, cv2.resize(letter_crop_resize(img=img, y=y, h=h, x=x, w=w),
                                                  (out_size, out_size), interpolation=cv2.INTER_AREA)))
             else:
                 symbol_count = math.ceil(w / h)  # округляем символы до большего целого
@@ -103,10 +104,10 @@ def letters_extract(file_path: str, out_size=OUT_SIZE) -> list:
                     x += i * w
                     # Resize letter to 28x28 and add letter and its X-coordinate
                     if w > 0:           # попадалась разметка с нулевой шириной
-                        letters.append((x, w, cv2.resize(letter_crop_resize(gray, y=y, h=h, x=x, w=w),
+                        letters.append((x, w, cv2.resize(letter_crop_resize(img=img, y=y, h=h, x=x, w=w),
                                                          (out_size, out_size), interpolation=cv2.INTER_AREA)))
 
-    letters.sort(key=lambda x: x[0], reverse=False)
+    letters.sort(key=lambda z: z[0], reverse=False)
     return letters
 
 
@@ -127,6 +128,10 @@ def create_dir(path: os.path) -> os.path:
     return path
 
 
+def cv2pil_converter(image: cv2) -> Image:
+    return None
+
+
 if __name__ == '__main__':
     # TODO добавить "следящий индекс" - сохранять во работы индекс обработанного файла и при следующем запуске
     # todo стартовать с последнего сохраненного.
@@ -136,11 +141,11 @@ if __name__ == '__main__':
         raise FileNotFoundError
 
     # temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
-    create_dir(TEMP_DIR)
+    create_dir(EXPORT_DIR)
     image_paths, image_names = get_files(WORK_DIR)
-    for id_i, image in enumerate(image_paths[:]):
+    for id_i, image in enumerate(image_paths[:10]):
         print(f'ImageID: {id_i}\nImagePath: {image}')
-        export_path = create_dir(os.path.join(TEMP_DIR, f"{image_names[id_i]}"))       # создаем папку для вывода
+        export_path = create_dir(os.path.join(EXPORT_DIR, f"{image_names[id_i]}"))       # создаем папку для вывода
         letters = letters_extract(file_path=image)
         text_path = os.path.join(WORK_DIR, f'{image_names[id_i]}.gt.txt')
         print(f'TextPath: {text_path}')
@@ -155,7 +160,11 @@ if __name__ == '__main__':
         try:
             # Выгрузка изображений с буквами в отдельные папки
             for id_l, letter in enumerate(letters):
-                cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.jpg'), letter[2])
+                letter[2].
+                color_converted = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                pil_image = Image.fromarray(color_converted)
+
+                # cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.jpg'), letter[2])
 
             # Выгрузка букв в отдельные файлы
             for id_c, char in enumerate(chars):
