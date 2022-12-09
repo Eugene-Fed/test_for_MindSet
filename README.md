@@ -17,10 +17,17 @@ https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection
 Then it should work
 
 ### TASK 3
-WORK IN PROGRESS
+**WORK IN PROGRESS: ...95%...**
+You can use created *ru_emnist_letters_100k_b64_e60.h5* model fo recognition. This will allow you not to start generating the model in the "Обучаем модель на датасете" block. And in this case, you do not have to generate the dataset yourself.
+And you can try generate new model on ruEMNIST handwrited dataset from internet. May be it will work better.
+https://www.kaggle.com/datasets/olgabelitskaya/handwritten-russian-letters
+https://www.kaggle.com/datasets/constantinwerner/cyrillic-handwriting-dataset
 
 ## Additional files
 
 ### parse_ru-mnist.py
 Self maid script to parse *Russian News Corpus* to letter.jpg + letter.txt dataset
 https://github.com/maxoodf/russian_news_corpus
+
+###dataset_generator.ipynb
+It generates .IDX dataset from parsed *Russian News Corpus*
