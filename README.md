@@ -6,6 +6,7 @@ Test work for an internship at **MindSet**
 To run **task_1.py** you should add photos to directory **pass_photos/**
 Requires library preinstallation **PIL** and **Tesseract-OSR** with Russian *"traineddata"*
 https://tesseract-ocr.github.io/tessdoc/Installation.html
+https://github.com/tesseract-ocr/tessdata/blob/main/rus.traineddata
 
 Text recognition is poor. But it turned out to be the easiest and most effective way of all that I tried before. Other libraries either do not recognize the Russian language at all, or had to face a huge number of problems during the installation process, or the volume of recognized text is even lower.
 
@@ -13,3 +14,13 @@ Text recognition is poor. But it turned out to be the easiest and most effective
 I used the Yandex Cloud API
 To execute this code, you need to follow the instructions for create Yandex.Cloud accaunt and obtaining the primary Yandex.ID token:
 https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection
+Then it should work
+
+### TASK 3
+WORK IN PROGRESS
+
+## Additional files
+
+### parse_ru-mnist.py
+Self maid script to parse *Russian News Corpus* to letter.jpg + letter.txt dataset
+https://github.com/maxoodf/russian_news_corpus
