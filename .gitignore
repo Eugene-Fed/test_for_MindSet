@@ -6,6 +6,10 @@ __pycache__/
 # API keys, meta, data and other secret info
 # pass_photos/
 
+# Datasets
+*.h5
+*.idx
+
 # C extensions
 *.so
 
