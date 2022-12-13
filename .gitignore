@@ -9,7 +9,7 @@ __pycache__/
 # Datasets
 *.h5
 *.idx
-!ru_emnist_letters_100k_b64_e150.h5
+!ru_emnist_letters_100k_b64_e150_upper2.h5
 
 # C extensions
 *.so
