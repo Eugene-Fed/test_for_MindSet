@@ -22,7 +22,7 @@ Then it should work
 2. Open `task_3.ipynb`. If you wanna use your EMNIST-like dataset then change path of `DATASET_IMG` and `DATASET_CLS` variables.  
 3. Execute all blocs from the first to part `Готовим модель и train/test`. If you wanna use already created Model - go to **Step 5.**  
 4. Execute all blocs from part `Готовим модель и train/test` to `Обучаем модель на датасете`. Then specify size of **Batch** and count of **Epochs** (*watch "Ideas for TASK 3"*). Run `Обучаем модель на датасете` block. Model with current settings will be calculating about 4.5 hours.  
-5. Execute all blocs from `Детекция данных из паспорта и сохранение фоток букв в файлы` to the End.  
+5. Execute all blocs from `Детекция данных из паспорта и сохранение фоток букв в файлы` to the End. Result will be printed and saved to the `task_3.txt` file.  
 
 If you pass **Step 4** then it will be used already created `ru_emnist_letters_100k_b64_e150_upper2.h5` model for recognition. This will allow you not to start generating the model in the `Обучаем модель на датасете` block. And in this case, you do not have to generate the dataset yourself.  
 And you can try generate new model on ruEMNIST handwrited dataset from internet. May be it will work better.  
