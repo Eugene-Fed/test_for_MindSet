@@ -40,9 +40,10 @@ After 103 epochs - loss: ~ 1.3, accuracy: ~ 0.78
 After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 - [x] Rewrite `dataset_generator.ipynb` for use only uppercase letters to create dataset. Original dataset has 'a' and 'b' liters in it names that means: 'a' - lowercase, 'b' - uppercase frases.  
 **After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91**
-- [ ] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
+- [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [ ] Increase resolution of train and production images from 28 to 32 pixels.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
+- [ ] Create adaptive setting of Brihtness/Contrast.
 
 ## Additional files
 ### parse_ru-mnist.py  
