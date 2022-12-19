@@ -18,7 +18,7 @@ Then it should work
 
 ### TASK 3
 **WORK IN PROGRESS: ...99%...**  
-1. Add Passport photos into `pass_photos\` folder  
+1. Add Passport photos into `pass_photos/` folder  
 2. Open `task_3.ipynb`. If you wanna use your EMNIST-like dataset then change path of `DATASET_IMG` and `DATASET_CLS` variables.  
 3. Execute all blocs from the first to part `Готовим модель и train/test`. If you wanna use already created Model - go to **Step 5.**  
 4. Execute all blocs from part `Готовим модель и train/test` to `Обучаем модель на датасете`. Then specify size of **Batch** and count of **Epochs** (*watch "Ideas for TASK 3"*). Run `Обучаем модель на датасете` block. Model with current settings will be calculating about 4.5 hours.  
@@ -41,7 +41,9 @@ After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 - [x] Rewrite `dataset_generator.ipynb` for use only uppercase letters to create dataset. Original dataset has 'a' and 'b' liters in it names that means: 'a' - lowercase, 'b' - uppercase frases.  
 **After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91**
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
+- [ ] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
 - [ ] Increase resolution of train and production images from 28 to 32 pixels.
+- [ ] Train model on more font variants.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
 - [ ] Create adaptive setting of Brihtness/Contrast.
 
