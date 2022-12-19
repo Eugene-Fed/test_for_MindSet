@@ -38,7 +38,7 @@ There is no need to generate more than **150 epochs** with size of **64 batch**,
 After 103 epochs - loss: ~ 1.3, accuracy: ~ 0.78
 - [x] Convert all letters in the training dataset to uppercase and thus reduce the classifier from 76 to 41 (without '0' and '3' numbers).  
 After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
-- [x] Rewrite `dataset_generator.ipynb` for use only uppercase letters to create dataset. Original dataset has 'a' and 'b' liters in it names that means: 'a' - lowercase, 'b' - uppercase frases.  
+- [x] Rewrite `dataset_generator.ipynb` for use only uppercase letters to create dataset. Original dataset has 'a' and 'b' liters in it names that means: 'a' - lowercase, 'b' - uppercase phrases.  
 **After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91**
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [ ] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
@@ -49,7 +49,7 @@ After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 
 ## Additional files
 ### parse_ru-mnist.py  
-Self maid script to parse *Russian News Corpus* `frase.jpg + frase.txt` to `letter.jpg + letter.txt` dataset  
+Self maid script to parse *Russian News Corpus* `phrase.jpg + phrase.txt` to `letter.jpg + letter.txt` dataset  
 <https://github.com/maxoodf/russian_news_corpus>  
 
 ### dataset_generator.ipynb  
