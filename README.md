@@ -1,8 +1,7 @@
 ## test_for_MindSet
 Test work for an internship at **MindSet**
 
-### TASK 1
-#### Select open libraries for document recognition and conduct passport recognition.  
+### TASK 1: Select open libraries for document recognition and conduct passport recognition.  
 **Since it was necessary to check the performance of several libraries, each of which pulls its own dependencies, it was easier for me to complete this task in PyCharm with a separate virtual environment for the project.**  
 To run `task_1.py` you should add photos to directory `pass_photos/`  
 Requires library preinstallation **PIL** and **Tesseract-OSR** with Russian *"traineddata"*  
@@ -11,15 +10,13 @@ Requires library preinstallation **PIL** and **Tesseract-OSR** with Russian *"tr
 
 Text recognition is poor. But it turned out to be the easiest and most effective way of all that I tried before. Other libraries either do not recognize the Russian language at all, or had to face a huge number of problems during the installation process, or the volume of recognized text is even lower.
 
-### TASK 2
-#### Select APIs with which you can perform recognition, perform recognition.  
+### TASK 2: Select APIs with which you can perform recognition, perform recognition.  
 I used the Yandex Cloud API
 To execute this code, you need to follow the instructions for create Yandex.Cloud accaunt and obtaining the primary Yandex.ID token:  
 <https://cloud.yandex.ru/docs/vision/operations/ocr/text-detection>  
 Then it should work
 
-### TASK 3
-#### Train your own algorithm (pytorch, tensorflow) that recognizes the full name from the passport (not using ready-made OCR libraries, but using open text recognition data).  
+### TASK 3: Train your own algorithm (pytorch, tensorflow) that recognizes the full name from the passport (not using ready-made OCR libraries, but using open text recognition data).  
 **WORK IN PROGRESS: ...99%...**  
 1. Add Passport photos into `pass_photos/` folder  
 2. Open `task_3.ipynb`. If you wanna use your EMNIST-like dataset then change path of `DATASET_IMG` and `DATASET_CLS` variables.  
