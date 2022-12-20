@@ -42,6 +42,7 @@ After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 **After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91**
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [x] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
+- [ ] Add train data augmentation for Model creation.
 - [ ] Increase resolution of train and production images from 28 to 32 pixels.
 - [ ] Train model on more font variants.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
