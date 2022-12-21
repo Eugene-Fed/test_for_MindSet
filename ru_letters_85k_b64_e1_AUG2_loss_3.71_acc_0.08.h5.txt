@@ -1,0 +1,6 @@
+
+Started at: 2022.12.21 20:25:15
+Finished at: 2022.12.21 20:26:42
+Total Runtime: 0:01:27.898897
+Loss: 3.71218
+Accuracy: 0.0802
