@@ -39,13 +39,13 @@ After 103 epochs - loss: ~ 1.3, accuracy: ~ 0.78
 - [x] Convert all letters in the training dataset to uppercase and thus reduce the classifier from 76 to 41 (without '0' and '3' numbers).  
 After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 - [x] Rewrite `dataset_generator.ipynb` for use only uppercase letters to create dataset. Original dataset has 'a' and 'b' liters in it names that means: 'a' - lowercase, 'b' - uppercase phrases.  
-**After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91**
+After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [x] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
 - [x] ~~Add train data augmentation for Model creation.~~ Add image normalization layer into the Model for increase accuracy of training and recognition.
 **After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94**
 - [x] Add Train, Validation and Test datasets of 125k, 25k and 25k elements respectively.
-- [ ] Check dataset for errors
+- [ ] Check dataset for errors - **WORK IN PROGRESS: ...10%...** 
 - [ ] Increase resolution of train and production images from 28 to 32 pixels.
 - [ ] Train model on more font variants.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
@@ -61,3 +61,6 @@ Self maid script to parse *Russian News Corpus* `phrase.jpg + phrase.txt` to `le
 It generates .IDX dataset from parsed *Russian News Corpus*  
 **IMPORTANT**  
 I was not able to make a dataset of more than **100,000** image options, because already at 150,000 a Memory Error occurs when saving the finished dataset. I am using *Intel Core i7* with *16GB of memory*. Perhaps it will be possible to make a dataset for 120-130 thousand, but I don’t see much point in this.
+
+### RECOMENDATION FOR FUTURE:  
+1. CHECK YOU DATASET!!! May it has severla errrors, that will give you **big shit**.  
