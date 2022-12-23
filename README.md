@@ -31,7 +31,7 @@ And you can try generate new model on ruEMNIST handwrited dataset from internet.
 Now the model correctly recognizes about 50% of characters. There are several ideas for improving results.  
 
 ### Ideas for TASK 3:  
-The best results of training with current parameters is: **loss ~ 0.38**, **accuracy: ~ 0.93**.  
+The best results of training with current parameters is: **loss ~ 0.33**, **accuracy: ~ 0.94**.  
 The best practice is training model only on uppercase letters. It gets perfect result on validate data, but worse on data from passport. I should work with passport's photo to do it more contrast.  
 There is no need to generate more than **150 epochs** with size of **64 batch**, because the performance is no longer improving. You should try changing other settings.
 - [x] Hide *X_train*, *X_test* normalization in block `Загружаем датасет Часть 2 / 2`.  
@@ -43,6 +43,9 @@ After 150 epochs - loss: ~ 0.98, accuracy: ~ 0.78
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [x] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
 - [x] ~~Add train data augmentation for Model creation.~~ Add image normalization layer into the Model for increase accuracy of training and recognition.
+**After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94**
+- [x] Add Train, Validation and Test datasets of 125k, 25k and 25k elements respectively.
+- [ ] Check dataset for errors
 - [ ] Increase resolution of train and production images from 28 to 32 pixels.
 - [ ] Train model on more font variants.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
