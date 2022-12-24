@@ -6,6 +6,9 @@ import os
 import re
 # import math                           # не используем, т.к. не режем широкие распознанные блоки
 from PIL import Image
+from pathlib import Path
+from itertools import product
+
 
 # Список всех настроечных параметров/констант
 WORK_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25"
@@ -14,8 +17,9 @@ OUT_SIZE = 28  # размер выходных изображений
 LIMIT_SIZE = 8  # размер блоков на изображении, меньше которого текст не вырезается
 SYMBOL_DIVIDE = 1.2  # если ширина блока больше высоты на этот коэффициент - то разделить его пополам
 PATTERN = r'\w'  # шаблон по которому будем извлекать из текста символы (только буквы и цифры)
-START_INDEX = 0  # индекс, с которого продолжаем обрабатывать файлы. Not used yet
-END_INDEX = 10
+# PATTERN = r'[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ]'  # шаблон по которому будем извлекать из текста символы
+START_INDEX = 0  # индекс, с которого продолжаем обрабатывать файлы
+END_INDEX = 1000
 LABELS = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
 
 
@@ -23,13 +27,14 @@ LABELS = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
 def get_files(directory: str) -> list:
     # TODO - переписать под использование Pathlib
     paths = []  # полный пути к файлам изображений
-    names = []  # имя без расширения
+    # names = []  # имя без расширения
     for filename in os.listdir(directory):
         if filename.endswith(".jpeg") or filename.endswith(".jpg") or filename.endswith(".png"):
             paths.append(os.path.join(directory, filename))
-            names.append(filename.split('.')[0])
+            # names.append(filename.split('.')[0])
 
-    return paths, names
+    # return paths, names
+    return paths
 
 
 def resize_image(image, out_size: int):
@@ -136,7 +141,7 @@ def extract_chars(file_path: str) -> list:
         # удаляем пробелы и все символы кроме букв из текста и разбиваем на символы
         text = f.read().strip()  # удаляем табы и лишние пробелы
         text = text.replace(' ', '')  # удаляем оставшиеся пробелы
-        text = re.findall(PATTERN, text)  # оставляем только буквы и цифры
+        text = re.findall(PATTERN, text)  # оставляем только буквы, цифры и `_`
         print(f'Список букв: {text}')
 
     return list(text)
@@ -167,44 +172,57 @@ if __name__ == '__main__':
 
     # temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
     create_dir(EXPORT_DIR)
-    image_paths, image_names = get_files(WORK_DIR)
-    for id_i, image in enumerate(image_paths[START_INDEX:END_INDEX]):
-        if image[-5] == 'a': continue              # игнорируем картинки в нижнем регистре
+    image_paths = get_files(WORK_DIR)
+    for id_i, image_path in enumerate(image_paths[START_INDEX:END_INDEX]):
+        # if image_path[-5] == 'a': continue              # игнорируем картинки в нижнем регистре
+        image_name = Path(image_path).stem
+        if image_name[-1] == 'a': continue       # берем последний символ в имени файла, соответственно индексу
 
-        print(f'ImageID: {id_i}\nImagePath: {image}')
-        letters = extract_letters(file_path=image)
+        print(f'ImageID: {id_i}\nImagePath: {image_path}')
+        letters = extract_letters(file_path=image_path)
         if letters == []: continue    # если получаем пустой список - то переходим к следующей картинке
 
-        export_path = create_dir(os.path.join(EXPORT_DIR, f"{image_names[id_i]}"))  # создаем папку для вывода
-        text_path = os.path.join(WORK_DIR, f'{image_names[id_i]}.gt.txt')
+        export_path = create_dir(os.path.join(EXPORT_DIR, f"{image_name}"))  # создаем папку для вывода
+        text_path = os.path.join(WORK_DIR, f'{image_name}.gt.txt')
         print(f'TextPath: {text_path}')
         chars = extract_chars(file_path=text_path)
 
+        # TODO - переписать этот кусок функционала. Ищем цифры в тексте. если они есть - переходим к следующему тексту
+        break_it = False
+        for char in chars:
+            if char not in LABELS:
+                break_it = True
+        if break_it: continue
+
+
         print(f'Len of Letters: {len(letters)}, Len of Chars: {len(chars)}')
         # если удалось распознать не все или лишние буквы - снижаем ошибку из-за пропусков нормализуя их количество
+        # можно вообще делать continue в случае, когда количество картинок и подписей к ним не совпадает
+        if len(letters) != len(chars): continue
         min_len = min(len(letters), len(chars))
         letters = letters[:min_len]
         chars = chars[:min_len]
 
         try:
+            # Выгрузка букв в отдельные файлы. Лишний цикл не нужен, т.к. сохраняем через цикл с изображениями
+            for id_c, char in enumerate(chars):
+                # не обязательно запускать два цикла, при условии что количество букв и ярлыков - равно
+                with open(os.path.join(export_path, f'{image_names[id_i]}_{id_c}.txt'), 'w') as f:
+                    f.write(char)
+
+
             # Выгрузка изображений букв в отдельные папки с преобразованием в RGB вместо BGR, который использует cv2
             for id_l, letter in enumerate(letters):
-                if chars[id_l] not in LABELS: break     # ради снижения ошибок и экономии, игнорируем знаки не из списка
+                # if chars[id_l] not in LABELS: break     # ради снижения ошибок и экономии, игнорируем знаки не из списка
                 # image = convert_cv2pil(image=letter)  # Преобразуем BGR формат OpenCV в RGB перед сохранением
 
                 cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.jpg'), letter[2])
                 # cv2.imwrite(os.path.join(export_path, f'{image_names[id_i]}_{id_l}_block.jpg'), blocks[id_l][2])
 
-                with open(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.txt'), 'w') as f:
-                    f.write(chars[id_l])
+                #with open(os.path.join(export_path, f'{image_names[id_i]}_{id_l}.txt'), 'w') as f:
+                #    f.write(chars[id_l])
 
-            # Выгрузка букв в отдельные файлы. Лишний цикл не нужен, т.к. сохраняем через цикл с изображениями
-            """
-            for id_c, char in enumerate(chars):
-                # не обязательно запускать два цикла, при условии что количество букв и ярлыков - равно
-                with open(os.path.join(export_path, f'{image_names[id_i]}_{id_c}.txt'), 'w') as f:
-                    f.write(char)
-            """
+
         except Exception as e:
             print(e)
             continue
