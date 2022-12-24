@@ -46,9 +46,9 @@ After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91
 **After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94**
 - [x] Add Train, Validation and Test datasets of 125k, 25k and 25k elements respectively.
 - [x] ~~Increase resolution of train and production images from 28 to 32 pixels.~~ Original data has resolution of letters less then 32 pixels.
-- [ ] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.
-- [ ] Add image normalization before searching symbol blocks.
-- [ ] Check dataset for errors - **WORK IN PROGRESS: ...10%...**
+- [x] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.
+- [x] Add image normalization before searching symbol blocks.
+- [x] ~~Check dataset for errors - **WORK IN PROGRESS: ...10%...**~~
 - [ ] Train model on more font variants.
 - [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
 - [ ] Create adaptive setting of Brihtness/Contrast.
