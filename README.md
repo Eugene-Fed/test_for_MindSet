@@ -51,7 +51,8 @@ After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94
 - [x] ~~Check dataset for errors - **WORK IN PROGRESS: ...10%...**~~
 - [x] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.  
 **After 150 epochs - loss: ~ 0.0136, accuracy: ~ 0.9997**
-- [ ] Rewrite `normalize_color` function in `task_3.ipynb` to detect symbols without *blur* and *cv2.erode()*
+- [x] ~~Rewrite `normalize_color` function in `task_3.ipynb` to detect symbols without *blur* and *cv2.erode()*~~ I can't do that because searching of word's blocks need to blur and erode image. I tried to use binarization threshhold for symbols searching, but it doesn't work.
+- [ ] Understand how image value normalization works by dividing its values by 255.
 - [ ] Get train dataset without white margins around symbols. It should be filled background color, not clean white. May be I should rewrite `parse_ru-mnist.py` to expand narrow symbol to square instead of padding the width with white margins.
 - [ ] Train model on more font variants.
 - [ ] Create adaptive setting of Brihtness/Contrast.
