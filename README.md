@@ -31,9 +31,9 @@ And you can try generate new model on ruEMNIST handwrited dataset from internet.
 Now the model correctly recognizes about 50% of characters. There are several ideas for improving results.  
 
 ### Ideas for TASK 3:  
-The best results of training with current parameters is: **loss ~ 0.33**, **accuracy: ~ 0.94**.  
+The best results of training with current parameters is: **loss ~ 0.0136**, **accuracy: ~ 0.9997**.  
 The best practice is training model only on uppercase letters. It gets perfect result on validate data, but worse on data from passport. I should work with passport's photo to do it more contrast.  
-There is no need to generate more than **150 epochs** with size of **64 batch**, because the performance is no longer improving. You should try changing other settings.
+There is no need to generate more than **55 epochs** with size of **64 batch**, because the performance is no longer improving. You should try changing other settings.
 - [x] Hide *X_train*, *X_test* normalization in block `Загружаем датасет Часть 2 / 2`.  
 After 103 epochs - loss: ~ 1.3, accuracy: ~ 0.78
 - [x] Convert all letters in the training dataset to uppercase and thus reduce the classifier from 76 to 41 (without '0' and '3' numbers).  
@@ -43,14 +43,17 @@ After 150 epochs - loss: ~ 0.51, accuracy: ~ 0.91
 - [x] Add margins around characters in production data and increase image contrast (make the background lighter). As an example, take images from the training sample.
 - [x] Add and use `Tesseract OCR` library to check the quality of images used for recognition.
 - [x] ~~Add train data augmentation for Model creation.~~ Add image normalization layer into the Model for increase accuracy of training and recognition.
-**After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94**
+After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94
 - [x] Add Train, Validation and Test datasets of 125k, 25k and 25k elements respectively.
-- [x] ~~Increase resolution of train and production images from 28 to 32 pixels.~~ Original data has resolution of letters less then 32 pixels.
-- [x] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.
+- [x] ~~Increase resolution of train and production images from 28 to 32 pixels.~~ Original data has resolution of letters less then 28 pixels.
 - [x] Add image normalization before searching symbol blocks.
+- [x] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
 - [x] ~~Check dataset for errors - **WORK IN PROGRESS: ...10%...**~~
+- [x] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.  
+**After 150 epochs - loss: ~ 0.0136, accuracy: ~ 0.9997**
+- [ ] Rewrite `normalize_color` function in `task_3.ipynb` to detect symbols without *blur* and *cv2.erode()*
+- [ ] Get train dataset without white margins around symbols. It should be filled background color, not clean white. May be I should rewrite `parse_ru-mnist.py` to expand narrow symbol to square instead of padding the width with white margins.
 - [ ] Train model on more font variants.
-- [ ] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
 - [ ] Create adaptive setting of Brihtness/Contrast.
 - [ ] Edit `dataset_generator` to save pictures in **int8** representation because we use value of pixels brightness beth 0..255.
 
@@ -65,4 +68,4 @@ It generates .IDX dataset from parsed *Russian News Corpus*
 I was not able to make a dataset of more than **100,000** image options, because already at 150,000 a Memory Error occurs when saving the finished dataset. I am using *Intel Core i7* with *16GB of memory*. Perhaps it will be possible to make a dataset for 120-130 thousand, but I don’t see much point in this.
 
 ### RECOMENDATION FOR FUTURE:  
-1. CHECK YOU DATASET!!! May it has severla errrors, that will give you **big shit**.  
+1. CHECK YOU DATASET!!! It can has several errors, that will give you **big shit**.  
