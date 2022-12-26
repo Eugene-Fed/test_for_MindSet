@@ -53,10 +53,11 @@ After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94
 **After 150 epochs - loss: ~ 0.0136, accuracy: ~ 0.9997**
 - [x] ~~Rewrite `normalize_color` function in `task_3.ipynb` to detect symbols without *blur* and *cv2.erode()*~~ I can't do that because searching of word's blocks need to blur and erode image. I tried to use binarization threshhold for symbols searching, but it doesn't work.
 - [x] Understand how image value normalization works by dividing its values by 255.
-- [x] Create Image color normalization module `color_normalization.py`
-- [x] Delete symbols' scale before detection, because this oparation degrades the quality.  
+- [x] Create Image color normalization module `color_normalization.py`.
+- [x] ~~Find the reason why when you try to normalize images in the emnist parser, images are saved in color inversion.~~  
+I rewrote `color_normalization.py` so that it returns the image in the same format as it receives it.
+- [ ] Delete symbols' scale before detection, because this oparation degrades the quality.  
 `passport_data_parser()` line `39`
-- [ ] Find the reason why when you try to normalize images in the emnist parser, images are saved in color inversion.
 - [ ] Get train dataset without white margins around symbols. It should be filled background color, not clean white. May be I should rewrite `parse_ru-mnist.py` to expand narrow symbol to square instead of padding the width with white margins.
 - [ ] Train model on more font variants.
 - [ ] Create adaptive setting of Brihtness/Contrast.
@@ -70,7 +71,8 @@ Self maid script to parse *Russian News Corpus* `phrase.jpg + phrase.txt` to `le
 ### dataset_generator.ipynb  
 It generates .IDX dataset from parsed *Russian News Corpus*  
 **IMPORTANT**  
-I was not able to make a dataset of more than **100,000** image options, because already at 150,000 a Memory Error occurs when saving the finished dataset. I am using *Intel Core i7* with *16GB of memory*. Perhaps it will be possible to make a dataset for 120-130 thousand, but I don’t see much point in this.
+I was not able to make a dataset of more than **150,000** image options, because it can generate `Memory Error` occurs when saving the finished dataset. I am using *Intel Core i7* with *16GB of memory*. Perhaps it will be possible to make a bigger dataset with `int8` np.dtype for image representation.
 
 ### RECOMENDATION FOR FUTURE:  
-1. CHECK YOU DATASET!!! It can has several errors, that will give you **big shit**.  
+1. **CHECK YOU DATASET**!!! It can has several errors, that will give you **big shit**.  
+2. **NORMALIZE YOU IMAGES**!!! This increases the contrast and the ability to recognize elements in the image.
