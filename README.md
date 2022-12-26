@@ -56,8 +56,9 @@ After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94
 - [x] Create Image color normalization module `color_normalization.py`.
 - [x] ~~Find the reason why when you try to normalize images in the emnist parser, images are saved in color inversion.~~  
 I rewrote `color_normalization.py` so that it returns the image in the same format as it receives it.
-- [ ] Delete symbols' scale before detection, because this oparation degrades the quality.  
-`passport_data_parser()` line `39`
+- [ ] ~~Delete symbols' scale before detection, because this oparation degrades the quality.~~ Check all methods of image scaling.  
+`passport_data_parser()` line `40`
+- [ ] Try to erode image before symbol detection.
 - [ ] Get train dataset without white margins around symbols. It should be filled background color, not clean white. May be I should rewrite `parse_ru-mnist.py` to expand narrow symbol to square instead of padding the width with white margins.
 - [ ] Train model on more font variants.
 - [ ] Create adaptive setting of Brihtness/Contrast.

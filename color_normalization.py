@@ -18,7 +18,7 @@ def normalize_it(x, old_min, old_max, new_min, new_max, is_int=True):
     Moved the calculations into a separate function to apply it to np.array.
     return (x - min_fact) / (max_fact - min_fact)
     """
-    if is_int:                                      # if dtype is `int` then divide entirely
+    if type(x) == 'int':                                      # if dtype is `int` then divide entirely
         x_norm = (x - old_min) * (new_max - new_min) // (old_max - old_min) + new_min
     else:                                           # else divide with preservation of the fractional part
         x_norm = (x - old_min) * (new_max - new_min) / (old_max - old_min) + new_min
@@ -41,7 +41,6 @@ def normalize_img_color(image):
     x * (max - min) + min                   # reverse operation
     """
     image_dtype = image.dtype               # get original image np.dtype to use it later
-    is_int = True                           # flag to calculate `int` or `float` values
     try:
         if image_dtype in ('uint8', 'int8'):
             new_min, new_max = np.iinfo(image_dtype).min, np.iinfo(image_dtype).max
@@ -50,10 +49,8 @@ def normalize_img_color(image):
         elif image_dtype in ('uint16', 'uint32', 'uint64'):
             new_min, new_max = -128, 127
         elif image_dtype in ('float16', 'float32', 'float64', 'float128'):
-            is_int = False
             new_min, new_max = 0.0, 1.0
         else:
-            is_int = False
             image = image.astype(np.float32)
             new_min, new_max = 0.0, 1.0
     except Exception as e:
@@ -69,7 +66,7 @@ def normalize_img_color(image):
     norm_vec = np.vectorize(normalize_it)  # vectorize function to normalize all values of the np.array
 
     # return image after normalization with type as like as input image
-    return norm_vec(image, old_min, old_max, new_min, new_max, is_int).astype(image_dtype)
+    return norm_vec(image, old_min, old_max, new_min, new_max).astype(image_dtype)
 
 
 if __name__ == '__main__':
