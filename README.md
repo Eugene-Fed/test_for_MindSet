@@ -33,7 +33,7 @@ Now the model correctly recognizes about 50% of characters. There are several id
 ### Ideas for TASK 3:  
 The best results of training with current parameters is: **loss ~ 0.0136**, **accuracy: ~ 0.9997**.  
 The best practice is training model only on uppercase letters. It gets perfect result on validate data, but worse on data from passport. I should work with passport's photo to do it more contrast.  
-There is no need to generate more than **55 epochs** with size of **64 batch**, because the performance is no longer improving. You should try changing other settings.
+There is no need to generate more than **25 epochs** with size of **64 batch**, because the performance is no longer improving. You should try changing other settings.
 - [x] Hide *X_train*, *X_test* normalization in block `Загружаем датасет Часть 2 / 2`.  
 After 103 epochs - loss: ~ 1.3, accuracy: ~ 0.78
 - [x] Convert all letters in the training dataset to uppercase and thus reduce the classifier from 76 to 41 (without '0' and '3' numbers).  
@@ -50,15 +50,18 @@ After 150 epochs - loss: ~ 0.33, accuracy: ~ 0.94
 - [x] Remove numbers from the training dataset and leave only 33 uppercase letters. We can check if a character matches a pattern before adding a new element to the dataset.
 - [x] ~~Check dataset for errors - **WORK IN PROGRESS: ...10%...**~~
 - [x] Rewrite `parse_ru-mnist.py` to minimize errors in image-labels data.  
-**After 150 epochs - loss: ~ 0.0136, accuracy: ~ 0.9997**
+After 150 epochs - loss: ~ 0.0136, accuracy: ~ 0.9997
 - [x] ~~Rewrite `normalize_color` function in `task_3.ipynb` to detect symbols without *blur* and *cv2.erode()*~~ I can't do that because searching of word's blocks need to blur and erode image. I tried to use binarization threshhold for symbols searching, but it doesn't work.
 - [x] Understand how image value normalization works by dividing its values by 255.
 - [x] Create Image color normalization module `color_normalization.py`.
 - [x] ~~Find the reason why when you try to normalize images in the emnist parser, images are saved in color inversion.~~  
-I rewrote `color_normalization.py` so that it returns the image in the same format as it receives it.
-- [ ] ~~Delete symbols' scale before detection, because this oparation degrades the quality.~~ Check all methods of image scaling.  
-`passport_data_parser()` line `40`
+I rewrote `color_normalization.py` so that it returns the image in the same format as it receives it.  
+**After 55 epochs - loss: ~ 0.0051, accuracy: ~ 0.9996**
+- [x] ~~Delete symbols' scale before detection, because this oparation degrades the quality.~~ Check all methods of image scaling.  
+`passport_data_parser()` line `40`.  
+This does not improve the quality, because the original photo is of poor quality and heavily distorted due to `.jpg` compression.
 - [ ] Try to erode image before symbol detection.
+- [ ] To generate a dataset in which the images will be of lower quality, it is possible to reduce the resolution to 16x16 pixels.
 - [ ] Get train dataset without white margins around symbols. It should be filled background color, not clean white. May be I should rewrite `parse_ru-mnist.py` to expand narrow symbol to square instead of padding the width with white margins.
 - [ ] Train model on more font variants.
 - [ ] Create adaptive setting of Brihtness/Contrast.
@@ -74,6 +77,11 @@ It generates .IDX dataset from parsed *Russian News Corpus*
 **IMPORTANT**  
 I was not able to make a dataset of more than **150,000** image options, because it can generate `Memory Error` occurs when saving the finished dataset. I am using *Intel Core i7* with *16GB of memory*. Perhaps it will be possible to make a bigger dataset with `int8` np.dtype for image representation.
 
-### RECOMENDATION FOR FUTURE:  
+## RECOMENDATION FOR FUTURE:  
 1. **CHECK YOU DATASET**!!! It can has several errors, that will give you **big shit**.  
 2. **NORMALIZE YOU IMAGES**!!! This increases the contrast and the ability to recognize elements in the image.
+3. **MAKE YOUR USERS IMPROVE THE QUALITY OF THE PHOTO**!!! In most cases, it is much easier to force users to take high-quality photographs of documents than to invent an 80-story model in order to improve recognition quality by a couple of percent.
+
+## GLOBAL TODO LIST:
+1. Understand how the `cv2.addWeighted` function works.
+2. Create `gammaCorrection` function to adding at the `OpenCV` libraty.
