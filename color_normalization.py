@@ -2,18 +2,17 @@
 import cv2
 import numpy as np
 
-image_test = cv2.imread(r"D:\work\test_comp_vision\test_for_MindSet\task_3_color_normalization_example.jpg")
+image_test = cv2.imread(r"D:\work\test_comp_vision\test_for_MindSet\pass_temp\2_symbols.jpg")
 image_test = cv2.cvtColor(image_test, cv2.COLOR_BGR2GRAY)
 
 
-def normalize_it(x, old_min, old_max, new_min, new_max, is_int=True):
+def normalize_it(x, old_min, old_max, new_min, new_max):
     """
     :param x: the pixel value
     :param old_min: minimum pixels value of original image
     :param old_max: maximum pixels value of original image
     :param new_min: normalized minimum value
     :param new_max: normalized maximum value
-    :param is_int: trigger to use on of two varians of divison: for int or for float
     :return: normalized pixel value
     Moved the calculations into a separate function to apply it to np.array.
     return (x - min_fact) / (max_fact - min_fact)
@@ -30,9 +29,10 @@ def normalize_it(x, old_min, old_max, new_min, new_max, is_int=True):
 
 
 # TODO - дополнить возможностью загрузки изображений по ссылке и объекта PIL.Image
-def normalize_img_color(image):
+def normalize_img_color(image, power='high'):
     """
     :param image: image as numpy.array() object - cv2.image. Strongly recommended GRAY
+    :param power: power of image bluring for color normalization. 'low', 'norm', 'high'
     :return: image as numpy.array() object - cv2.image. Strongly recommended GRAY
     Gets image as numpy.array() from cv2.Image and normalize values to min-max range of `image` datatype
     That increase image contrast
@@ -59,7 +59,17 @@ def normalize_img_color(image):
         print(e)
         exit(1)
 
-    blur = cv2.GaussianBlur(image, (15, 15), 0)  # get blur image to calculate `old_min` and `old_max` val without noise
+    # The more blur, the less noise in the image, which means that the contrast increases more
+    if power == 'low':
+        blur_kernel = (15, 15)
+    elif power == 'norm':
+        blur_kernel = (35, 35)
+    else:
+        blur_kernel = (55, 55)
+    blur = cv2.GaussianBlur(image, blur_kernel, 0)  # get blur image to calc. `old_min` and `old_max` val without noise
+    # cv2.imshow('BLURED', blur)
+    # cv2.waitKey(0)
+
     old_min = blur.min()
     old_max = blur.max()
 
@@ -71,15 +81,19 @@ def normalize_img_color(image):
 
 if __name__ == '__main__':
     img_test_min, img_test_max = image_test.min(), image_test.max()
-    image_norm = normalize_img_color(image_test)
-    img_norm_min, img_norm_max = image_norm.min(), image_norm.max()
+    image_norm_1 = normalize_img_color(image_test, power='low')
+    image_norm_2 = normalize_img_color(image_test, power='norm')
+    image_norm_3 = normalize_img_color(image_test, power='high')
+    img_norm_min, img_norm_max = image_norm_3.min(), image_norm_3.max()
 
     print(image_test.dtype)
     print(img_test_min, img_test_max)
-    print(image_norm.dtype)
+    print(image_norm_3.dtype)
     print(img_norm_min, img_norm_max)
 
     cv2.imshow('original', image_test)
-    cv2.imshow('NORMALIZED', image_norm)
+    cv2.imshow('NORMALIZED', image_norm_1)
+    cv2.imshow('NORMALIZED 2', image_norm_2)
+    cv2.imshow('NORMALIZED 3', image_norm_3)
 
     cv2.waitKey(0)
