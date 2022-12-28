@@ -4,15 +4,17 @@ import cv2
 import numpy as np
 import os
 import re
-# import math                           # не используем, т.к. не режем широкие распознанные блоки
+import color_normalization as cn
+# import math                           # не используем, т.к. больше не режем широкие распознанные блоки
 from PIL import Image
 from pathlib import Path
+from tqdm import tqdm
 from itertools import product
 
 
 # Список всех настроечных параметров/констант
 WORK_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25"
-EXPORT_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_fix"
+EXPORT_DIR = r"D:\work\test_comp_vision\datasets\!_lines_w25_parsed_norm"
 OUT_SIZE = 28  # размер выходных изображений
 LIMIT_SIZE = 8  # размер блоков на изображении, меньше которого текст не вырезается
 SYMBOL_DIVIDE = 1.2  # если ширина блока больше высоты на этот коэффициент - то разделить его пополам
@@ -66,8 +68,9 @@ def crop_resize_letters(img, y, h, x, w):
     size_max = max(w, h)
     # TODO - Изменить, чтобы вместо заполнения белым фоном, изображения расширялись до квадрата
     # todo - это позволит нормализовать цвет, повысить контрастность картинки
+    # нормализуем цвет картинки, чтобы фон стал максимально белым, а текст - максимально черным
+    letter_crop = cn.normalize_img_color(letter_crop)
     letter_square = 255 * np.ones(shape=[size_max, size_max], dtype=np.uint8)
-
     try:
         if w > h:
             y_pos = size_max // 2 - h // 2
@@ -94,7 +97,7 @@ def extract_letters(file_path: str, out_size=OUT_SIZE) -> list:
     else:
         gray = img
 
-    kernel = np.ones((2, 2), 'uint8')
+    # kernel = np.ones((2, 2), 'uint8')
     # erosion = cv2.erode(gray, kernel, iterations=1)
     # thresh = cv2.threshold(erosion, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
@@ -114,6 +117,7 @@ def extract_letters(file_path: str, out_size=OUT_SIZE) -> list:
         limit = int(LIMIT_SIZE)  # ограничение на мелкие символы, чтобы их не вырезать
         if limit < h < img.shape[0] and limit < w < img.shape[1]:  # игнорируем маленькие блоки размером с изображение
             if w < h * SYMBOL_DIVIDE:  # если ширина найденного блока не слишком велика, то вырезаем символ
+                # TODO - убрать использование функции `crop_resize_letters()`
                 letters.append((x, w, cv2.resize(crop_resize_letters(img=gray, y=y, h=h, x=x, w=w),
                                                  (out_size, out_size), interpolation=cv2.INTER_AREA)))
                 # blocks.append((x, w, result[y:y + h, x:x + w]))
@@ -143,7 +147,7 @@ def extract_chars(file_path: str) -> list:
         text = f.read().strip()  # удаляем табы и лишние пробелы
         text = text.replace(' ', '')  # удаляем оставшиеся пробелы
         text = re.findall(PATTERN, text)  # оставляем только буквы, цифры и `_`
-        print(f'Список букв: {text}')
+        # print(f'Список букв: {text}')
 
     return list(text)
 
@@ -174,18 +178,18 @@ if __name__ == '__main__':
     # temp_dir = os.path.join(WORK_DIR, TEMP_DIR)
     create_dir(EXPORT_DIR)
     image_paths = get_files(WORK_DIR)
-    for id_i, image_path in enumerate(image_paths[START_INDEX:END_INDEX]):
+    for id_i, image_path in tqdm(enumerate(image_paths[START_INDEX:END_INDEX])):
         # if image_path[-5] == 'a': continue              # игнорируем картинки в нижнем регистре
         image_name = Path(image_path).stem
         if image_name[-1] == 'a': continue       # игнорируем тест в нижнем регистре, с `_a` на конце
 
-        print(f'ImageID: {id_i}\nImagePath: {image_path}')
+        # print(f'ImageID: {id_i}\nImagePath: {image_path}')
         letters = extract_letters(file_path=image_path)
         if letters == []: continue    # если получаем пустой список - то переходим к следующей картинке
 
         # export_path = create_dir(os.path.join(EXPORT_DIR, f"{image_name}"))  # создаем папку для вывода
         text_path = os.path.join(WORK_DIR, f'{image_name}.gt.txt')             # выбираем текст по названию картинки
-        print(f'TextPath: {text_path}')
+        # print(f'TextPath: {text_path}')
         chars = extract_chars(file_path=text_path)
 
         # TODO - переписать этот кусок функционала. Ищем цифры в тексте. если они есть - переходим к следующему тексту
@@ -195,7 +199,7 @@ if __name__ == '__main__':
                 break_it = True
         if break_it: continue
 
-        print(f'Len of Letters: {len(letters)}, Len of Chars: {len(chars)}')
+        # print(f'Len of Letters: {len(letters)}, Len of Chars: {len(chars)}')
         # если удалось распознать не все или лишние буквы - снижаем ошибку из-за пропусков нормализуя их количество
         # можно вообще делать continue в случае, когда количество картинок и подписей к ним не совпадает
         if len(letters) != len(chars): continue
