@@ -64,8 +64,9 @@ Decided along with the previous paragraph.
 `passport_data_parser()` line `40`.  
 This does not improve the quality, because the original photo is of poor quality and heavily distorted due to `.jpg` compression.
 - [x] ~~Try to erode image before symbol detection.~~ Doesn't improve the quality.
-- [x] To ~~generate a dataset~~ change the Model in which the images will resize to lower quality. It is possible to reduce the resolution to 14x14 pixels.
-- [ ] Read all examples of image recognition on `habr.com`.
+- [x] To ~~generate a dataset~~ change the Model in which the images will resize to lower quality. It is possible to reduce the resolution to 14x14 pixels.  
+- [ ] Read all examples of image recognition on `habr.com`.  
+- [ ] Add a flag to select letter recognition using `Tesseract` or by using my own model.
 - [ ] Generate dataset with more font variants. This is necessary because training data images scaled down to 16 pixels before training are still too high quality.
 - [ ] Rewrite symbol detector to searching symbols direct from words, without additional symbol detection and separate recognition.
 - [ ] Edit `dataset_generator` to save pictures in **int8** representation because we use value of pixels brightness beth 0..255.
