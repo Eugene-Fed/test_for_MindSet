@@ -66,6 +66,7 @@ This does not improve the quality, because the original photo is of poor quality
 - [x] ~~Try to erode image before symbol detection.~~ Doesn't improve the quality.
 - [x] To ~~generate a dataset~~ change the Model in which the images will resize to lower quality. It is possible to reduce the resolution to 14x14 pixels.  
 - [ ] Read all examples of image recognition on `habr.com`.  
+- [ ] Add `requirements.txt` file in repository.  
 - [ ] Add a flag to select letter recognition using `Tesseract` or by using my own model.
 - [ ] Generate dataset with more font variants. This is necessary because training data images scaled down to 16 pixels before training are still too high quality.
 - [ ] Rewrite symbol detector to searching symbols direct from words, without additional symbol detection and separate recognition.
