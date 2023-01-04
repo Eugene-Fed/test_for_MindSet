@@ -84,10 +84,11 @@ I was not able to make a dataset of more than **150,000** image options, because
 
 ## RECOMENDATION FOR FUTURE:  
 1. **CHECK YOUR DATASET**!!! It may has several errors, that will give you **big shit**.  
-2. **NORMALIZE YOU IMAGES**!!! This action increases the contrast and the ability of elemens recognition in the image.
+2. **NORMALIZE YOUR IMAGES**!!! This action increases the contrast and the ability of elemens recognition in the image.
 3. **MAKE YOUR USERS IMPROVE THE QUALITY OF THE PHOTO!!!** In most cases, it is much easier to force users to take high-quality photographs of documents than to invent an 80-story model in order to improve recognition quality by a couple of percent.
 4. **TRAIN YOUR MODEL ON BAD DATA!!!** It will most likely be easier to "spoil" good data from the dadaset than to improve the real data for recognition. For example, you can pre-compress the data in the training dataset, or add a reduction layer to the input of the Model.
 5. **DOES LEARNING REQUIRE A LOT OF EPOCH? CHECK YOUR DATA!!!** If the quality continues to improve after 100 epochs there is something wrong with your data. Or your batch too small.  
+6. **ADD AN IMAGE RESIZE LAYER TO THE MODEL INPUT!!!** It is much easier to resize an image for training and recognition in one place than to change the code in two or more places: when creating a dataset, when sending data for training, and when sending data for prediction.  
 
 ## GLOBAL TODO LIST:
 1. Understand how the `cv2.addWeighted` function works.
