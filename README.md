@@ -70,7 +70,8 @@ This does not improve the quality, because the original photo is of poor quality
 - [ ] Add a flag to select letter recognition using `Tesseract` or by using my own model.
 - [ ] Generate dataset with more font variants. This is necessary because training data images scaled down to 16 pixels before training are still too high quality.
 - [ ] Rewrite symbol detector to searching symbols direct from words, without additional symbol detection and separate recognition.
-- [ ] Edit `dataset_generator` to save pictures in **int8** representation because we use value of pixels brightness beth 0..255.
+- [ ] Edit `dataset_generator` to save pictures in **int8** representation because we use value of pixels brightness beth 0..255.  
+- [ ] Transfer the categorization of the dataset with labels from the external code into the model.
 
 ## Additional files
 ### parse_ru-mnist.py  
